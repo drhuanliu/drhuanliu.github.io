@@ -1,0 +1,67 @@
+<html>
+<head>
+    <title>Cookie!!!</title>
+    <script type="text/javascript">
+        const PC = "persistentcookie";
+        const SC = "sessioncookie"        
+
+
+        function setCookie(name,value,days) {
+           var expires = "";
+           if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days*24*60*60*1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+        }
+        function setCookies() {
+            setCookie(PC, "PERSISTENT", 1);
+            setCookie(SC, "SESSION", 0);
+            displayCookies();
+        }
+
+
+        
+        function getCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for(var i=0;i < ca.length;i++) {
+                var c = ca[i];
+                while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+            }
+            return null;
+        }
+        function displayCookies() {
+            var p = getCookie(PC);
+            document.getElementById("persistentcookie").textContent = p;
+            var s = getCookie(SC);
+            document.getElementById("sessioncookie").textContent = s;
+        }
+
+
+
+
+        function eraseCookie(name) {   
+            document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        }
+        function clearCookies() {
+            eraseCookie("persistentcookie");
+            eraseCookie("sessioncookie");
+            displayCookies();
+        }
+    </script>
+</head>
+<body onload="displayCookies()">
+
+<h1>Session Cookie: <span id="sessioncookie"></span></h1>
+<h1>Persistent Cookie: <span id="persistentcookie"></span></h1>
+
+<button style="height:80px;width:200px" onclick="setCookies()">Set Cookie</button>
+<button style="height:80px;width:200px" onclick="clearCookies()">Clear Cookie</button>
+
+</body>
+
+
+</html>
