@@ -16,13 +16,13 @@
             document.cookie = name + "=" + (value || "")  + expires + "; path=/";
         }
         function setCookies() {
-            setCookie(PC, "PERSISTENT", 1);
-            setCookie(SC, "SESSION", 0);
+            setCookie(PC, "PERSISTENT" + Math.floor(Math.random() * 100), 1);
+            setCookie(SC, "SESSION" + Math.floor(Math.random() * 100), 0);
             displayCookies();
         }
 
 
-        
+
         function getCookie(name) {
             var nameEQ = name + "=";
             var ca = document.cookie.split(';');
