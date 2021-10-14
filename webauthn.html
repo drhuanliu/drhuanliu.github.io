@@ -1,0 +1,74 @@
+
+<html>
+    <head>
+        <title>webauthn test</title>
+        <script type="text/javascript">
+
+var publicKeyCredentialCreationOptions = {
+    challenge: Uint8Array.from(
+        "acbdfdefa", c => c.charCodeAt(0)),
+    rp: {
+        name: "test site",
+        id: "drhuanliu.github.io",
+    },
+    user: {
+        id: Uint8Array.from(
+            "UZSL85T9AFC", c => c.charCodeAt(0)),
+        name: "lee@webauthn.guide",
+        displayName: "Lee",
+    },
+    pubKeyCredParams: [{alg: -7, type: "public-key"}],
+    // authenticatorSelection: {
+    //     authenticatorAttachment: "platform",
+    //     //authenticatorAttachment: "cross-platform",
+    // },
+    timeout: 60000,
+    attestation: "direct"
+};
+
+function registerPlatform() {
+    publicKeyCredentialCreationOptions.authenticatorSelection = {authenticatorAttachment: "platform"};
+    const credential =  navigator.credentials.create({
+        publicKey: publicKeyCredentialCreationOptions
+    });
+    console.log(credential);
+}
+
+function registerNonPlatform() {
+    publicKeyCredentialCreationOptions.authenticatorSelection = {authenticatorAttachment: "cross-platform"};
+    const credential =  navigator.credentials.create({
+        publicKey: publicKeyCredentialCreationOptions
+    });
+    console.log(credential);
+}
+
+function registerAny() {
+    publicKeyCredentialCreationOptions.authenticatorSelection = {};
+    const credential =  navigator.credentials.create({
+        publicKey: publicKeyCredentialCreationOptions
+    });
+    console.log(credential);
+}
+
+function check() {
+    if (window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
+        document.getElementById("stat").textContent = "We detect you have a platform authenticator";
+
+    }
+}
+
+</script>
+</head>
+<body onload="check()">
+
+<h1>WebAuthn platform authenticator experience test</h1>
+<h2 id="stat">no platform authenticator found</h2>
+
+<button style="height:80px;width:300px" onclick="registerPlatform()">Register Platform authenticator experience</button><br/><br/>
+<button style="height:80px;width:300px" onclick="registerNonPlatform()">Register Non-Platform authenticator experience</button><br/><br/>
+<button style="height:80px;width:300px" onclick="registerAny()">Register Any authenticator experience</button><br/><br/>
+
+</body>
+
+
+</html>
