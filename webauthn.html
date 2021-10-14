@@ -4,6 +4,97 @@
         <title>webauthn test</title>
         <script type="text/javascript">
 
+
+
+function browserOSDetect() {
+    var nVer = navigator.appVersion;
+    var nAgt = navigator.userAgent;
+    var browserName  = navigator.appName;
+    var fullVersion  = ''+parseFloat(navigator.appVersion); 
+    var majorVersion = parseInt(navigator.appVersion,10);
+    var nameOffset,verOffset,ix;
+
+    // In Opera, the true version is after "Opera" or after "Version"
+    if ((verOffset=nAgt.indexOf("Opera"))!=-1) {
+    browserName = "Opera";
+    fullVersion = nAgt.substring(verOffset+6);
+    if ((verOffset=nAgt.indexOf("Version"))!=-1) 
+    fullVersion = nAgt.substring(verOffset+8);
+    }
+    // In MSIE, the true version is after "MSIE" in userAgent
+    else if ((verOffset=nAgt.indexOf("MSIE"))!=-1) {
+    browserName = "Microsoft Internet Explorer";
+    fullVersion = nAgt.substring(verOffset+5);
+    }
+    // In Chrome, the true version is after "Chrome" 
+    else if ((verOffset=nAgt.indexOf("Chrome"))!=-1) {
+    browserName = "Chrome";
+    fullVersion = nAgt.substring(verOffset+7);
+    }
+    // In Safari, the true version is after "Safari" or after "Version" 
+    else if ((verOffset=nAgt.indexOf("Safari"))!=-1) {
+    browserName = "Safari";
+    fullVersion = nAgt.substring(verOffset+7);
+    if ((verOffset=nAgt.indexOf("Version"))!=-1) 
+    fullVersion = nAgt.substring(verOffset+8);
+    }
+    // In Firefox, the true version is after "Firefox" 
+    else if ((verOffset=nAgt.indexOf("Firefox"))!=-1) {
+    browserName = "Firefox";
+    fullVersion = nAgt.substring(verOffset+8);
+    }
+    // In most other browsers, "name/version" is at the end of userAgent 
+    else if ( (nameOffset=nAgt.lastIndexOf(' ')+1) < 
+            (verOffset=nAgt.lastIndexOf('/')) ) 
+    {
+    browserName = nAgt.substring(nameOffset,verOffset);
+    fullVersion = nAgt.substring(verOffset+1);
+    if (browserName.toLowerCase()==browserName.toUpperCase()) {
+    browserName = navigator.appName;
+    }
+    }
+    // trim the fullVersion string at semicolon/space if present
+    if ((ix=fullVersion.indexOf(";"))!=-1)
+    fullVersion=fullVersion.substring(0,ix);
+    if ((ix=fullVersion.indexOf(" "))!=-1)
+    fullVersion=fullVersion.substring(0,ix);
+
+    majorVersion = parseInt(''+fullVersion,10);
+    if (isNaN(majorVersion)) {
+    fullVersion  = ''+parseFloat(navigator.appVersion); 
+    majorVersion = parseInt(navigator.appVersion,10);
+    }
+
+    document.getElementById("browser").innerHTML = 'Browser name  = '+browserName+'<br>'
+    +'Full version  = '+fullVersion+'<br>'
+    +'Major version = '+majorVersion+'<br>'
+    +'navigator.appName = '+navigator.appName+'<br>'
+    +'navigator.userAgent = '+navigator.userAgent+'<br>';
+
+
+    var OSName="Unknown OS";
+    if (navigator.appVersion.indexOf("Win")!=-1) OSName="Windows";
+    if (navigator.appVersion.indexOf("Mac")!=-1) OSName="MacOS";
+    if (navigator.appVersion.indexOf("X11")!=-1) OSName="UNIX";
+    if (navigator.appVersion.indexOf("Linux")!=-1) OSName="Linux";
+
+    document.getElementById("os").innerHTML = 'Your OS: '+OSName + '<br>Your platform: '+ navigator.platform;
+
+    if (navigator.platform.startsWith("iPhone")) {
+        document.getElementById("bio").innerHTML = "You most likely have FaceID/TouchID";
+    }
+    else if (navigator.platform.startsWith("Mac")) {
+        document.getElementById("bio").innerHTML = "You most likely have TouchID";
+    }
+    else if (navigator.platform.startsWith("Win")) {
+        document.getElementById("bio").innerHTML = "You most likely have Windows Hello";
+    }
+    else {
+        document.getElementById("bio").innerHTML = "I do not know what authenticator you have";
+    }
+
+}
+
 var publicKeyCredentialCreationOptions = {
     challenge: Uint8Array.from(
         "acbdfdefa", c => c.charCodeAt(0)),
@@ -55,6 +146,7 @@ function check() {
         document.getElementById("stat").textContent = "We detect you have a platform authenticator";
 
     }
+    browserOSDetect();
 }
 
 </script>
@@ -62,7 +154,11 @@ function check() {
 <body onload="check()">
 
 <h1>WebAuthn platform authenticator experience test</h1>
+
 <h2 id="stat">no platform authenticator found</h2>
+<h2 id="browser"></h2>
+<h2 id="os"></h2>
+<h2 id="bio"></h2>
 
 <button style="height:80px;width:300px" onclick="registerPlatform()">Register Platform authenticator experience</button><br/><br/>
 <button style="height:80px;width:300px" onclick="registerNonPlatform()">Register Non-Platform authenticator experience</button><br/><br/>
