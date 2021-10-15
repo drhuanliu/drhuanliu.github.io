@@ -78,16 +78,20 @@ function browserOSDetect() {
     if (navigator.appVersion.indexOf("X11")!=-1) OSName="UNIX";
     if (navigator.appVersion.indexOf("Linux")!=-1) OSName="Linux";
 
-    document.getElementById("os").innerHTML = 'Your OS: '+OSName + '<br>Your platform: '+ navigator.platform;
+    document.getElementById("os").innerHTML = OSName;
+    document.getElementById("platform").innerHTML = navigator.platform;
 
     if (navigator.platform.startsWith("iPhone")) {
-        document.getElementById("bio").innerHTML = "You most likely have FaceID/TouchID";
+        document.getElementById("bio").innerHTML = "most likely <b>FaceID/TouchID</b>";
     }
     else if (navigator.platform.startsWith("Mac")) {
-        document.getElementById("bio").innerHTML = "You most likely have TouchID";
+        document.getElementById("bio").innerHTML = "most likely <b>TouchID</b>";
     }
     else if (navigator.platform.startsWith("Win")) {
-        document.getElementById("bio").innerHTML = "You most likely have Windows Hello";
+        document.getElementById("bio").innerHTML = "most likely <b>Windows Hello</b>";
+    }
+    else if (navigator.platform.startsWith("Linux")) {
+        document.getElementById("bio").innerHTML = "most likely <b>Android built-in</b>";
     }
     else {
         document.getElementById("bio").innerHTML = "I do not know what authenticator you have";
@@ -143,7 +147,7 @@ function registerAny() {
 
 function check() {
     if (window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
-        document.getElementById("stat").textContent = "We detect you have a platform authenticator";
+        document.getElementById("stat").innerHTML = "detected a <b>Platform Authenticator</b>";
 
     }
     browserOSDetect();
@@ -153,16 +157,25 @@ function check() {
 </head>
 <body onload="check()">
 
-<h1>WebAuthn platform authenticator experience test</h1>
+<h1>WebAuthn experience demo</h1>
 
-<h2 id="stat">no platform authenticator found</h2>
-<h2 id="browser"></h2>
-<h2 id="os"></h2>
-<h2 id="bio"></h2>
+<h2>Platform authenticator available?</h2>
+<p id="stat">no platform authenticator found</p>
+<p id="bio"></p>
 
-<button style="height:80px;width:300px" onclick="registerPlatform()">Register Platform authenticator experience</button><br/><br/>
-<button style="height:80px;width:300px" onclick="registerNonPlatform()">Register Non-Platform authenticator experience</button><br/><br/>
-<button style="height:80px;width:300px" onclick="registerAny()">Register Any authenticator experience</button><br/><br/>
+<h2>Broswer</h2>
+<p id="browser"></p>
+
+<h2>OS</h2>
+<p id="os"></p>
+
+<h2>Platform</h2>
+<p id="platform"></p>
+
+<h2>Test authenticator enrollment experience</h2>
+<button style="height:80px;width:300px" onclick="registerPlatform()">Register Platform authenticator</button><br/><br/>
+<button style="height:80px;width:300px" onclick="registerNonPlatform()">Register Non-Platform authenticator</button><br/><br/>
+<button style="height:80px;width:300px" onclick="registerAny()">Register Any authenticator</button><br/><br/>
 
 </body>
 
